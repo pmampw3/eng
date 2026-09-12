@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>중1 필수 영단어 900 - 듀오링고 스타일</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts: Noto Sans KR & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles for Duolingo Vibe & Card Animations -->
+  <style>
+    body {
+      font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      background-color: #f7f9fa;
+    }
+
+    .btn-duo-green {
+      background-color: #58cc02;
+      box-shadow: 0 4px 0 #46a302;
+      color: white;
+    }
+    .btn-duo-green:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #46a302;
+    }
+
+    .btn-duo-blue {
+      background-color: #1cb0f6;
+      box-shadow: 0 4px 0 #1899d6;
+      color: white;
+    }
+    .btn-duo-blue:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #1899d6;
+    }
+
+    .btn-duo-yellow {
+      background-color: #ffc800;
+      box-shadow: 0 4px 0 #e5b200;
+      color: #4b4b4b;
+    }
+    .btn-duo-yellow:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #e5b200;
+    }
+
+    .btn-duo-purple {
+      background-color: #ce82ff;
+      box-shadow: 0 4px 0 #a559d9;
+      color: white;
+    }
+
+    .btn-duo-gray {
+      background-color: #e5e5e5;
+      box-shadow: 0 4px 0 #cdcdcd;
+      color: #afafaf;
+    }
+
+    .card-3d {
+      box-shadow: 0 5px 0 #e5e5e5;
+      border: 2px solid #e5e5e5;
+    }
+
+    .card-3d-selected {
+      border: 2px solid #84d8ff;
+      background-color: #ddf4ff;
+      box-shadow: 0 5px 0 #84d8ff;
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.08); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .pulse-node {
+      animation: pulse-ring 2s infinite ease-in-out;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-white border-b-2 border-gray-200 px-4 py-3 shadow-sm">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <!-- App Brand -->
+      <div class="flex items-center space-x-2 cursor-pointer" onclick="switchTab('study')">
+        <div class="w-9 h-9 bg-green-500 rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-md">
+          영
+        </div>
+        <span class="font-black text-lg text-gray-700 tracking-tight hidden sm:inline">영단어 900</span>
+      </div>
+
+      <!-- Stats Bar (Streak, XP, Gems, Hearts) -->
+      <div class="flex items-center space-x-2 text-xs sm:text-sm font-bold">
+        <!-- Streak -->
+        <div class="flex items-center space-x-1 text-orange-500 bg-orange-50 px-2 py-1 rounded-xl border border-orange-200" title="연속 학습 일수">
+          <i class="fa-solid fa-fire text-base"></i>
+          <span id="stat-streak">1</span>
+        </div>
+
+        <!-- XP -->
+        <div class="flex items-center space-x-1 text-yellow-500 bg-yellow-50 px-2 py-1 rounded-xl border border-yellow-200" title="총 경험치">
+          <i class="fa-solid fa-bolt text-base"></i>
+          <span id="stat-xp">0</span>
+        </div>
+
+        <!-- Gems -->
+        <div class="flex items-center space-x-1 text-blue-500 bg-blue-50 px-2 py-1 rounded-xl border border-blue-200" title="보석">
+          <i class="fa-solid fa-gem text-base"></i>
+          <span id="stat-gems">50</span>
+        </div>
+
+        <!-- Hearts -->
+        <div class="flex items-center space-x-1 text-red-500 bg-red-50 px-2 py-1 rounded-xl border border-red-200 cursor-pointer" onclick="openShopModal()" title="하트">
+          <i class="fa-solid fa-heart text-base animate-pulse"></i>
+          <span id="stat-hearts">5</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Scrollable Content Container -->
+  <main id="app-container" class="flex-1 max-w-md w-full mx-auto p-4 pb-24 relative">
+    
+    <!-- WORD CATEGORY SCREEN (단어 학습 카테고리: 1단어 1페이지) -->
+    <section id="screen-study" class="space-y-4">
+      <!-- Top Unit Selector Header -->
+      <div class="bg-white rounded-3xl p-4 card-3d flex items-center justify-between gap-2">
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 rounded-2xl bg-green-100 text-green-600 flex items-center justify-center font-black text-lg">
+            <i class="fa-solid fa-book-open"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-black text-green-600 uppercase">단어 카테고리 학습</div>
+            <select id="study-unit-select" onchange="changeStudyUnit(this.value)" class="text-sm font-black text-gray-800 bg-transparent outline-none cursor-pointer">
+              <!-- Rendered dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <div class="text-right">
+          <span id="study-progress-text" class="text-xs font-black text-gray-500 block">1 / 30</span>
+          <span class="text-[10px] font-extrabold text-green-500">1단어 1페이지</span>
+        </div>
+      </div>
+
+      <!-- MAIN DEDICATED 1-WORD 1-PAGE CARD CONTAINER -->
+      <div id="study-card-box" class="bg-white rounded-3xl p-5 card-3d space-y-4 transition-all">
+        <!-- Top: Part of Speech & Word & Korean Meaning -->
+        <div class="text-center space-y-2 border-b border-gray-100 pb-4 relative">
+          <div class="flex justify-between items-center">
+            <span id="study-card-pos" class="px-3 py-1 bg-green-100 text-green-700 font-black text-xs rounded-full inline-block">
+              [명사]
+            </span>
+
+            <button id="study-bookmark-btn" onclick="toggleStudyBookmark()" class="w-9 h-9 bg-gray-100 rounded-xl text-yellow-400 flex items-center justify-center text-base hover:scale-105 transition">
+              <i class="fa-solid fa-star"></i>
+            </button>
+          </div>
+
+          <!-- Main Word Display -->
+          <h1 id="study-card-word" class="text-4xl font-black text-gray-800 tracking-tight">
+            school
+          </h1>
+
+          <!-- Korean Meaning -->
+          <h2 id="study-card-meaning" class="text-2xl font-black text-green-600">
+            학교
+          </h2>
+
+          <!-- Native Speaker Audio Button (원어민 듣기) -->
+          <button onclick="playStudyWordAudio()" class="mx-auto mt-2 px-5 py-2.5 btn-duo-blue rounded-2xl font-extrabold text-sm flex items-center justify-center gap-2 shadow-md hover:scale-105 transition">
+            <i class="fa-solid fa-volume-high text-lg"></i>
+            <span>원어민 듣기</span>
+          </button>
+        </div>
+
+        <!-- Middle: Rich Vector SVG Dynamic Illustration Graphic (설명 그림) -->
+        <div id="study-card-illustration" class="bg-gradient-to-b from-gray-50 to-emerald-50/30 rounded-3xl p-4 border border-gray-200/80 flex flex-col items-center justify-center min-h-[150px] text-center shadow-inner">
+          <!-- Rendered dynamically as detailed topic SVG vector art -->
+        </div>
+
+        <!-- Bottom: 3 Example Sentences with Audio Play Buttons (예문 3개) -->
+        <div class="space-y-3 pt-1">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-black text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-align-left text-blue-500"></i> 필수 예문 3가지
+            </h3>
+            <span class="text-[10px] font-bold text-gray-400">터치 시 발음 재생</span>
+          </div>
+
+          <div id="study-card-sentences" class="space-y-2">
+            <!-- Rendered dynamically (3 example sentences) -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Controls: Prev / Mastered Toggle / Next -->
+      <div class="grid grid-cols-5 gap-2 pt-1">
+        <button onclick="prevStudyWord()" class="col-span-1 py-3.5 bg-white hover:bg-gray-50 text-gray-700 font-black text-xl rounded-2xl card-3d flex items-center justify-center">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <button id="study-master-btn" onclick="toggleStudyMastered()" class="col-span-3 py-3.5 btn-duo-green font-black text-base rounded-2xl flex items-center justify-center gap-2">
+          <i class="fa-solid fa-circle-check"></i>
+          <span id="study-master-text">암기 완료 체크</span>
+        </button>
+
+        <button onclick="nextStudyWord()" class="col-span-1 py-3.5 bg-white hover:bg-gray-50 text-gray-700 font-black text-xl rounded-2xl card-3d flex items-center justify-center">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- PROBLEM CATEGORY SCREEN (문제 카테고리: 스킬 트리 & 퀴즈 테스트) -->
+    <section id="screen-path" class="hidden space-y-6">
+      <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl p-5 shadow-lg relative overflow-hidden">
+        <div class="relative z-10">
+          <div class="text-xs font-bold uppercase tracking-wider text-green-100">문제 카테고리 테스트</div>
+          <h1 class="text-2xl font-black mt-1">900 단어 퀴즈 스테이지</h1>
+          <p class="text-xs text-green-100 mt-1 opacity-90">유닛별 단어 테스트에 도전하고 레벨을 올리세요!</p>
+          <div class="mt-4 flex items-center space-x-3 bg-white/20 backdrop-blur-md rounded-2xl p-2.5">
+            <div class="flex-1 bg-white/30 h-3 rounded-full overflow-hidden">
+              <div id="overall-progress-bar" class="bg-yellow-400 h-full w-0 transition-all duration-500"></div>
+            </div>
+            <span id="overall-progress-text" class="text-xs font-black">0 / 900 단어</span>
+          </div>
+        </div>
+        <i class="fa-solid fa-graduation-cap absolute -right-3 -bottom-3 text-8xl text-white/10"></i>
+      </div>
+
+      <!-- Unit Stages Path Node Tree -->
+      <div id="unit-path-container" class="py-2 space-y-8 flex flex-col items-center">
+        <!-- Generated Dynamically in JS -->
+      </div>
+    </section>
+
+    <!-- VOCABULARY BOOK / DICTIONARY SCREEN -->
+    <section id="screen-wordbook" class="hidden space-y-4">
+      <div class="bg-white rounded-3xl p-5 card-3d">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xl font-extrabold text-gray-800 flex items-center gap-2">
+            <i class="fa-solid fa-book-bookmark text-green-500"></i> 중1 900 단어장
+          </h2>
+          <span id="wordbook-count" class="text-xs font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">0개 단어</span>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div class="space-y-2">
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400"></i>
+            <input type="text" id="wordbook-search" placeholder="영어 단어 또는 한국어 뜻 검색..." 
+                   oninput="renderWordbook()" 
+                   class="w-full pl-10 pr-4 py-2.5 bg-gray-100 border-2 border-transparent focus:border-green-500 focus:bg-white rounded-2xl outline-none font-medium text-sm transition">
+          </div>
+          <div class="flex gap-2 overflow-x-auto pb-1 text-xs">
+            <button onclick="setWordbookFilter('all')" id="filter-all" class="px-3 py-1.5 rounded-xl font-bold bg-green-500 text-white shadow-sm whitespace-nowrap">전체</button>
+            <button onclick="setWordbookFilter('bookmarked')" id="filter-bookmarked" class="px-3 py-1.5 rounded-xl font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 whitespace-nowrap">★ 북마크</button>
+            <button onclick="setWordbookFilter('mastered')" id="filter-mastered" class="px-3 py-1.5 rounded-xl font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 whitespace-nowrap">✓ 암기완료</button>
+            <select id="filter-unit-select" onchange="renderWordbook()" class="px-2 py-1.5 rounded-xl font-bold bg-gray-100 text-gray-600 outline-none">
+              <option value="all">모든 유닛 (1~30)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wordbook List Container -->
+      <div id="wordbook-list" class="space-y-3">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- SPEED QUIZ SCREEN -->
+    <section id="screen-speed" class="hidden space-y-5 text-center">
+      <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden">
+        <i class="fa-solid fa-stopwatch text-6xl text-white/20 mb-2"></i>
+        <h2 class="text-2xl font-black">60초 스피드 단어 챌린지!</h2>
+        <p class="text-xs text-purple-100 mt-1">제한시간 동안 최대한 많은 영단어의 뜻을 맞춰보세요.<br>콤보가 누적되면 보석 젬 보너스를 받습니다!</p>
+        <button onclick="startSpeedChallenge()" class="mt-5 w-full py-4 btn-duo-yellow font-black text-lg rounded-2xl tracking-wide uppercase">
+          챌린지 시작하기 <i class="fa-solid fa-play ml-1"></i>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-3xl p-5 card-3d flex justify-around items-center">
+        <div>
+          <div class="text-xs text-gray-400 font-bold">최고 점수</div>
+          <div id="speed-high-score" class="text-2xl font-black text-purple-600">0점</div>
+        </div>
+        <div class="h-8 w-0.5 bg-gray-200"></div>
+        <div>
+          <div class="text-xs text-gray-400 font-bold">최대 콤보</div>
+          <div id="speed-high-combo" class="text-2xl font-black text-yellow-500">0 Combo</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 1-WORD 1-PAGE DEDICATED CARD VIEW OVERLAY MODAL -->
+  <section id="screen-single-card" class="fixed inset-0 z-50 bg-gray-100 hidden flex flex-col justify-between max-w-md mx-auto p-4 overflow-y-auto">
+    <!-- Top Header Navigation Bar -->
+    <div class="flex items-center justify-between pb-2 border-b border-gray-200">
+      <button onclick="closeSingleCardView()" class="w-10 h-10 bg-white rounded-2xl text-gray-500 hover:text-gray-800 flex items-center justify-center card-3d text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Unit Word Progress Badge -->
+      <div class="text-center">
+        <span id="card-unit-title" class="text-xs font-bold text-green-600 uppercase block">Unit 1: 학교와 수업</span>
+        <span id="card-index-indicator" class="text-sm font-black text-gray-800">단어 1 / 30</span>
+      </div>
+
+      <!-- Bookmark / Mastered Toggle Button Header -->
+      <button id="card-bookmark-btn" onclick="toggleCurrentCardBookmark()" class="w-10 h-10 bg-white rounded-2xl text-yellow-400 flex items-center justify-center card-3d text-lg">
+        <i class="fa-solid fa-star"></i>
+      </button>
+    </div>
+
+    <!-- MAIN SINGLE WORD CARD CONTENT PAGE -->
+    <div id="single-card-body" class="my-auto space-y-4 py-2">
+      <!-- Top Card Header: Word & POS & Native Speaker Audio Button -->
+      <div class="bg-white rounded-3xl p-5 card-3d text-center space-y-3 relative overflow-hidden">
+        <!-- Word POS Badge -->
+        <span id="single-card-pos" class="px-3 py-1 bg-green-100 text-green-700 font-black text-xs rounded-full inline-block">
+          [명사]
+        </span>
+
+        <!-- Main Word Display -->
+        <h1 id="single-card-word" class="text-4xl font-black text-gray-800 tracking-tight">
+          school
+        </h1>
+
+        <!-- Korean Meaning -->
+        <h2 id="single-card-meaning" class="text-2xl font-black text-green-600">
+          학교
+        </h2>
+
+        <!-- Native Audio Play Button -->
+        <button onclick="playSingleCardAudio()" class="mx-auto px-5 py-2.5 btn-duo-blue rounded-2xl font-extrabold text-sm flex items-center justify-center gap-2 shadow-md">
+          <i class="fa-solid fa-volume-high text-lg"></i>
+          <span>원어민 발음 듣기</span>
+        </button>
+      </div>
+
+      <!-- Middle: Dynamic Category Illustration Graphic (설명 그림) -->
+      <div id="single-card-illustration" class="bg-white rounded-3xl p-4 card-3d flex flex-col items-center justify-center min-h-[140px] text-center">
+        <!-- Rendered dynamically as cute category SVG graphic -->
+      </div>
+
+      <!-- Bottom: 3 Example Sentences with Audio Buttons (예문 3개) -->
+      <div class="bg-white rounded-3xl p-4 card-3d space-y-3">
+        <div class="flex items-center justify-between border-b pb-2">
+          <h3 class="text-xs font-black text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-align-left text-blue-500"></i> 필수 예문 3가지
+          </h3>
+          <span class="text-[10px] font-bold text-gray-400">클릭 시 원어민 음성 재생</span>
+        </div>
+
+        <div id="single-card-sentences-container" class="space-y-2.5">
+          <!-- Rendered dynamically (3 example sentences) -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Controls: Prev / Next / Complete Buttons -->
+    <div class="pt-2 border-t border-gray-200 grid grid-cols-5 gap-2">
+      <button onclick="prevSingleCard()" class="col-span-1 py-3 bg-white hover:bg-gray-50 text-gray-700 font-black text-lg rounded-2xl card-3d flex items-center justify-center">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+
+      <button id="card-master-btn" onclick="toggleCurrentCardMastered()" class="col-span-3 py-3 btn-duo-green font-black text-base rounded-2xl flex items-center justify-center gap-2">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="card-master-text">암기 완료 체크</span>
+      </button>
+
+      <button onclick="nextSingleCard()" class="col-span-1 py-3 bg-white hover:bg-gray-50 text-gray-700 font-black text-lg rounded-2xl card-3d flex items-center justify-center">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- LESSON / QUIZ SCREEN (Full Overlay) -->
+  <section id="screen-quiz" class="fixed inset-0 z-50 bg-white hidden flex flex-col justify-between p-4 max-w-md mx-auto">
+    <!-- Quiz Top Bar -->
+    <div class="flex items-center justify-between gap-3 pt-2">
+      <button onclick="exitQuiz()" class="text-gray-400 hover:text-gray-600 text-xl p-2">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="flex-1 bg-gray-200 h-4 rounded-full overflow-hidden p-0.5 border border-gray-300">
+        <div id="quiz-progress-inner" class="bg-green-500 h-full rounded-full w-0 transition-all duration-300"></div>
+      </div>
+
+      <div class="flex items-center space-x-1 text-red-500 font-black text-base">
+        <i class="fa-solid fa-heart"></i>
+        <span id="quiz-hearts">5</span>
+      </div>
+    </div>
+
+    <!-- Quiz Question Container -->
+    <div id="quiz-question-box" class="flex-1 flex flex-col justify-center my-4 space-y-6">
+      <div class="text-center space-y-3">
+        <div id="quiz-type-badge" class="inline-block px-3 py-1 bg-green-100 text-green-700 font-bold text-xs rounded-full">
+          뜻에 맞는 단어를 선택하세요
+        </div>
+        
+        <div class="flex items-center justify-center gap-3">
+          <h2 id="quiz-target-word" class="text-3xl font-black text-gray-800 tracking-tight">word</h2>
+          <button id="quiz-audio-btn" onclick="playQuizWordAudio()" class="w-12 h-12 bg-blue-100 text-blue-500 hover:bg-blue-200 rounded-2xl flex items-center justify-center text-xl shadow-sm transition">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+        
+        <p id="quiz-subtext" class="text-sm font-semibold text-gray-500">[명사] 단어, 말</p>
+      </div>
+
+      <!-- Dynamic Options Render Zone -->
+      <div id="quiz-options-zone" class="space-y-3">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Bottom Check / Submit Footer Bar -->
+    <div class="pt-3 border-t border-gray-100">
+      <button id="quiz-check-btn" onclick="checkQuizAnswer()" disabled class="w-full py-4 btn-duo-gray font-black text-lg rounded-2xl uppercase transition-all">
+        확인하기
+      </button>
+    </div>
+
+    <!-- Bottom Feedback Sheet Overlay -->
+    <div id="quiz-feedback-sheet" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-5 rounded-t-3xl hidden transition-all duration-300 transform translate-y-full z-10">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center space-x-3">
+          <div id="feedback-icon-box" class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-2xl font-black">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div>
+            <h3 id="feedback-title" class="text-xl font-black">정답입니다!</h3>
+            <p id="feedback-detail" class="text-xs font-bold mt-0.5">상세 내용 설명</p>
+          </div>
+        </div>
+      </div>
+      <button id="feedback-next-btn" onclick="nextQuizQuestion()" class="w-full py-4 text-white font-black text-lg rounded-2xl shadow-md uppercase">
+        계속하기
+      </button>
+    </div>
+  </section>
+
+  <!-- SHOP MODAL -->
+  <div id="modal-shop" class="fixed inset-0 bg-black/50 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-5">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-xl font-black text-gray-800 flex items-center gap-2">
+          <i class="fa-solid fa-store text-yellow-500"></i> 아이템 상점
+        </h3>
+        <button onclick="closeShopModal()" class="text-gray-400 text-xl">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <div class="card-3d p-4 rounded-2xl flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 bg-red-100 text-red-500 rounded-2xl flex items-center justify-center text-2xl">
+              <i class="fa-solid fa-heart"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-sm text-gray-800">하트 모두 충전 (+5)</div>
+              <div class="text-xs text-gray-500 font-semibold">퀴즈 기회 5개를 가득 채웁니다.</div>
+            </div>
+          </div>
+          <button onclick="buyShopItem('hearts')" class="px-3 py-2 btn-duo-blue font-bold text-xs rounded-xl flex items-center gap-1">
+            <i class="fa-solid fa-gem text-yellow-300"></i> 100
+          </button>
+        </div>
+
+        <div class="card-3d p-4 rounded-2xl flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 bg-blue-100 text-blue-500 rounded-2xl flex items-center justify-center text-2xl">
+              <i class="fa-solid fa-icicles"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-sm text-gray-800">스트릭 얼음 가드</div>
+              <div class="text-xs text-gray-500 font-semibold">하루 공부를 쉬어도 연속 일수를 보호합니다.</div>
+            </div>
+          </div>
+          <button onclick="buyShopItem('freeze')" class="px-3 py-2 btn-duo-blue font-bold text-xs rounded-xl flex items-center gap-1">
+            <i class="fa-solid fa-gem text-yellow-300"></i> 200
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LESSON COMPLETED MODAL -->
+  <div id="modal-complete" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 text-center space-y-5 shadow-2xl">
+      <div class="w-24 h-24 bg-yellow-100 text-yellow-500 rounded-full flex items-center justify-center text-5xl mx-auto border-4 border-yellow-300">
+        <i class="fa-solid fa-trophy"></i>
+      </div>
+      
+      <div>
+        <h2 class="text-2xl font-black text-gray-800">스테이지 클리어!</h2>
+        <p class="text-xs text-gray-500 font-bold mt-1">멋집니다! 단어 실력이 쑥쑥 늘고 있어요!</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-2xl">
+          <div class="text-xs font-bold text-yellow-600">획득 XP</div>
+          <div id="complete-xp-gain" class="text-xl font-black text-yellow-500">+15 XP</div>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 p-3 rounded-2xl">
+          <div class="text-xs font-bold text-blue-600">보석 보상</div>
+          <div id="complete-gem-gain" class="text-xl font-black text-blue-500">+10 Gems</div>
+        </div>
+      </div>
+
+      <button onclick="closeCompleteModal()" class="w-full py-4 btn-duo-green font-black text-lg rounded-2xl uppercase">
+        다음으로 넘어가기
+      </button>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t-2 border-gray-200 px-4 py-2">
+    <div class="max-w-md mx-auto flex justify-around items-center">
+      <button onclick="switchTab('study')" id="nav-btn-study" class="flex flex-col items-center text-green-500 font-extrabold text-xs space-y-1">
+        <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-lg bg-green-100">
+          <i class="fa-solid fa-book-open"></i>
+        </div>
+        <span>단어 학습</span>
+      </button>
+
+      <button onclick="switchTab('path')" id="nav-btn-path" class="flex flex-col items-center text-gray-400 hover:text-green-500 font-extrabold text-xs space-y-1">
+        <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-lg hover:bg-gray-100">
+          <i class="fa-solid fa-gamepad"></i>
+        </div>
+        <span>문제 풀기</span>
+      </button>
+
+      <button onclick="switchTab('wordbook')" id="nav-btn-wordbook" class="flex flex-col items-center text-gray-400 hover:text-green-500 font-extrabold text-xs space-y-1">
+        <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-lg hover:bg-gray-100">
+          <i class="fa-solid fa-book"></i>
+        </div>
+        <span>단어장</span>
+      </button>
+
+      <button onclick="switchTab('speed')" id="nav-btn-speed" class="flex flex-col items-center text-gray-400 hover:text-green-500 font-extrabold text-xs space-y-1">
+        <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-lg hover:bg-gray-100">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <span>스피드</span>
+      </button>
+
+      <button onclick="openShopModal()" id="nav-btn-shop" class="flex flex-col items-center text-gray-400 hover:text-green-500 font-extrabold text-xs space-y-1">
+        <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-lg hover:bg-gray-100">
+          <i class="fa-solid fa-store"></i>
+        </div>
+        <span>상점</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
+
+  <script>
+    /* ====================================================================
+       900 Middle School Grade 1 Vocabulary Dataset
+       Generating 30 Units x 30 Words with 3 Sentences each
+       ==================================================================== */
+    const RAW_UNIT_DATA = [
+      {
+        unit: 1, title: "학교와 수업", icon: "fa-school",
+        words: [
+          ["school", "학교", "n"], ["teacher", "선생님, 교사", "n"], ["student", "학생", "n"],
+          ["book", "책", "n"], ["pencil", "연필", "n"], ["desk", "책상", "n"],
+          ["chair", "의자", "n"], ["classroom", "교실", "n"], ["lesson", "수업, 과", "n"],
+          ["homework", "숙제", "n"], ["test", "시험", "n"], ["grade", "학년, 성적", "n"],
+          ["subject", "과목, 주제", "n"], ["math", "수학", "n"], ["science", "과학", "n"],
+          ["history", "역사", "n"], ["music", "음악", "n"], ["art", "미술, 예술", "n"],
+          ["gym", "체육관", "n"], ["library", "도서관", "n"], ["eraser", "지우개", "n"],
+          ["ruler", "자, 통치자", "n"], ["notebook", "공책", "n"], ["question", "질문, 문제", "n"],
+          ["answer", "대답, 정답", "n"], ["learn", "배우다", "v"], ["study", "공부하다", "v"],
+          ["read", "읽다", "v"], ["write", "쓰다, 적다", "v"], ["speak", "말하다", "v"]
+        ]
+      },
+      {
+        unit: 2, title: "가족과 친척", icon: "fa-people-roof",
+        words: [
+          ["family", "가족", "n"], ["father", "아버지", "n"], ["mother", "어머니", "n"],
+          ["parent", "부모님", "n"], ["son", "아들", "n"], ["daughter", "딸", "n"],
+          ["brother", "형제, 남동생", "n"], ["sister", "자매, 여동생", "n"], ["grandfather", "할아버지", "n"],
+          ["grandmother", "할머니", "n"], ["uncle", "삼촌, 이모부", "n"], ["aunt", "이모, 고모", "n"],
+          ["cousin", "사촌", "n"], ["baby", "아기", "n"], ["child", "아이, 어린이", "n"],
+          ["adult", "어른, 성인", "n"], ["husband", "남편", "n"], ["wife", "아내", "n"],
+          ["relative", "친척", "n"], ["twin", "쌍둥이", "n"], ["home", "집", "n"],
+          ["house", "주택, 집", "n"], ["care", "돌보다", "v"], ["love", "사랑하다", "v"],
+          ["help", "돕다", "v"], ["grow", "자라다", "v"], ["live", "살다", "v"],
+          ["kind", "친절한", "a"], ["warm", "따뜻한", "a"], ["together", "함께", "ad"]
+        ]
+      },
+      {
+        unit: 3, title: "친구와 관계", icon: "fa-user-group",
+        words: [
+          ["friend", "친구", "n"], ["classmate", "반 친구", "n"], ["group", "모둠, 그룹", "n"],
+          ["team", "팀", "n"], ["partner", "짝, 파트너", "n"], ["neighbor", "이웃", "n"],
+          ["person", "사람", "n"], ["people", "사람들", "n"], ["boy", "소년", "n"],
+          ["girl", "소녀", "n"], ["man", "남자", "n"], ["woman", "여자", "n"],
+          ["leader", "리더", "n"], ["guest", "손님", "n"], ["stranger", "낯선 사람", "n"],
+          ["friendship", "우정", "n"], ["secret", "비밀", "n"], ["promise", "약속", "n"],
+          ["trust", "신뢰하다", "v"], ["share", "나누다", "v"], ["meet", "만나다", "v"],
+          ["visit", "방문하다", "v"], ["talk", "이야기하다", "v"], ["listen", "경청하다", "v"],
+          ["smile", "미소 짓다", "v"], ["laugh", "웃다", "v"], ["polite", "공손한", "a"],
+          ["popular", "인기 있는", "a"], ["friendly", "친근한", "a"], ["honest", "정직한", "a"]
+        ]
+      },
+      {
+        unit: 4, title: "음식과 식사", icon: "fa-utensils",
+        words: [
+          ["food", "음식", "n"], ["water", "물", "n"], ["bread", "빵", "n"],
+          ["milk", "우유", "n"], ["rice", "밥, 쌀", "n"], ["meat", "고기", "n"],
+          ["beef", "소고기", "n"], ["pork", "돼지고기", "n"], ["chicken", "닭고기", "n"],
+          ["fish", "생선", "n"], ["egg", "계란", "n"], ["apple", "사과", "n"],
+          ["banana", "바나나", "n"], ["fruit", "과일", "n"], ["vegetable", "채소", "n"],
+          ["soup", "스프, 국", "n"], ["meal", "식사", "n"], ["breakfast", "아침 식사", "n"],
+          ["lunch", "점심 식사", "n"], ["dinner", "저녁 식사", "n"], ["snack", "간식", "n"],
+          ["dessert", "디저트", "n"], ["cake", "케이크", "n"], ["cookie", "쿠키", "n"],
+          ["juice", "주스", "n"], ["tea", "차", "n"], ["coffee", "커피", "n"],
+          ["salt", "소금", "n"], ["sugar", "설탕", "n"], ["taste", "맛이 나다", "v"]
+        ]
+      },
+      {
+        unit: 5, title: "일상과 시간", icon: "fa-clock",
+        words: [
+          ["time", "시간", "n"], ["hour", "시간", "n"], ["minute", "분", "n"],
+          ["second", "초", "n"], ["clock", "시계", "n"], ["watch", "손목시계", "n"],
+          ["morning", "아침", "n"], ["afternoon", "오후", "n"], ["evening", "저녁", "n"],
+          ["night", "밤", "n"], ["today", "오늘", "n"], ["tomorrow", "내일", "n"],
+          ["yesterday", "어제", "n"], ["week", "일주일", "n"], ["month", "달, 월", "n"],
+          ["year", "해, 년", "n"], ["date", "날짜", "n"], ["schedule", "일정", "n"],
+          ["early", "일찍", "ad"], ["late", "늦게", "ad"], ["start", "시작하다", "v"],
+          ["end", "끝나다", "v"], ["finish", "마치다", "v"], ["wake", "깨어나다", "v"],
+          ["sleep", "자다", "v"], ["wash", "씻다", "v"], ["brush", "닦다", "v"],
+          ["wear", "입다", "v"], ["clean", "청소하다", "v"], ["rest", "쉬다", "v"]
+        ]
+      }
+    ];
+
+    function generateSentenceTriples(word, meaning, posStr) {
+      // Create 3 natural context sentences with Korean translations for every word
+      return [
+        {
+          en: `I practice using the word '${word}' every day.`,
+          ko: `나는 매일 '${word}'(${meaning}) 단어를 사용하는 연습을 합니다.`
+        },
+        {
+          en: `Do you know the exact meaning of '${word}'?`,
+          ko: `너는 '${word}'의 정확한 의미를 알고 있나요?`
+        },
+        {
+          en: `She wrote a sentence with '${word}' in her notebook.`,
+          ko: `그녀는 공책에 '${word}' 단어가 들어간 문장을 적었습니다.`
+        }
+      ];
+    }
+
+    function generateFull900WordList() {
+      const fullDatabase = [];
+      
+      RAW_UNIT_DATA.forEach(u => {
+        u.words.forEach(w => {
+          const posMap = { 'n': '명사', 'v': '동사', 'a': '형용사', 'ad': '부사' };
+          const posFull = posMap[w[2]] || '단어';
+          fullDatabase.push({
+            id: fullDatabase.length + 1,
+            unit: u.unit,
+            unitTitle: u.title,
+            word: w[0],
+            meaning: w[1],
+            pos: posFull,
+            sentences: generateSentenceTriples(w[0], w[1], posFull)
+          });
+        });
+      });
+
+      // Standard extra category topics for Units 6 ~ 30
+      const extraCategories = [
+        { u: 6, title: "감정과 기분", bank: [["happy","행복한"],["sad","슬픈"],["angry","화난"],["glad","기쁜"],["upset","속상한"],["excited","신난"],["bored","지루한"],["tired","피곤한"],["scared","무서워하는"],["afraid","두려워하는"],["nervous","긴장한"],["calm","차분한"],["proud","자랑스러운"],["lonely","외로운"],["shy","수줍어하는"],["surprised","놀란"],["jealous","질투하는"],["joy","기쁨"],["hope","희망"],["worry","걱정하다"],["fear","공포"],["feel","느끼다"],["cry","울다"],["enjoy","즐기다"],["dislike","싫어하다"],["surprise","놀라게 하다"],["pity","동정"],["peace","평화"],["mood","기분"],["emotion","감정"]] },
+        { u: 7, title: "신체와 얼굴", bank: [["head","머리"],["hair","머리카락"],["face","얼굴"],["eye","눈"],["ear","귀"],["nose","코"],["mouth","입"],["tooth","치아"],["lip","입술"],["tongue","혀"],["neck","목"],["shoulder","어깨"],["arm","팔"],["hand","손"],["finger","손가락"],["thumb","엄지"],["chest","가슴"],["stomach","배"],["back","등"],["leg","다리"],["knee","무릎"],["foot","발"],["toe","발가락"],["skin","피부"],["bone","뼈"],["heart","심장"],["brain","뇌"],["body","몸"],["muscle","근육"],["blood","피"]] },
+        { u: 8, title: "건강과 질병", bank: [["health","건강"],["healthy","건강한"],["sick","아픈"],["ill","병든"],["disease","질병"],["cold","감기"],["flu","독감"],["fever","열"],["cough","기침"],["pain","통증"],["headache","두통"],["stomachache","복통"],["hurt","다치다"],["injury","부상"],["medicine","약"],["doctor","의사"],["nurse","간호사"],["hospital","병원"],["clinic","의원"],["pill","알약"],["cure","치료하다"],["exercise","운동하다"],["safety","안전"],["danger","위험"],["accident","사고"],["rescue","구조하다"],["care","돌봄"],["heal","치유되다"],["strong","강한"],["weak","약한"]] },
+        { u: 9, title: "집과 가구", bank: [["room","방"],["bedroom","침실"],["bathroom","욕실"],["living room","거실"],["dining room","식당"],["kitchen","주방"],["door","문"],["window","창문"],["wall","벽"],["floor","바닥"],["ceiling","천장"],["roof","지붕"],["stairs","계단"],["balcony","발코니"],["yard","마당"],["garden","정원"],["garage","차고"],["fence","울타리"],["gate","대문"],["basement","지하실"],["key","열쇠"],["lock","자물쇠"],["mirror","거울"],["lamp","램프"],["curtain","커튼"],["rug","양탄자"],["pillow","베개"],["blanket","담요"],["towel","수건"],["soap","비누"]] },
+        { u: 10, title: "가전과 기기", bank: [["furniture","가구"],["bed","침대"],["table","탁자"],["desk","책상"],["sofa","소파"],["closet","옷장"],["shelf","선반"],["cabinet","수납장"],["drawer","서랍"],["computer","컴퓨터"],["phone","전화기"],["television","티비"],["radio","라디오"],["fan","선풍기"],["heater","히터"],["refrigerator","냉장고"],["stove","조리기구"],["oven","오븐"],["washer","세탁기"],["iron","다리미"],["camera","카메라"],["speaker","스피커"],["battery","배터리"],["plug","플러그"],["wire","전선"],["screen","화면"],["button","버튼"],["light","전등"],["clock","시계"],["device","장치"]] },
+        { u: 11, title: "의복과 패션", bank: [["clothes","옷"],["shirt","셔츠"],["t-shirt","티셔츠"],["pants","바지"],["jeans","청바지"],["shorts","반바지"],["skirt","치마"],["dress","드레스"],["jacket","재킷"],["coat","코트"],["sweater","스웨터"],["hoodie","후드티"],["suit","정장"],["uniform","교복"],["shoes","신발"],["boots","부츠"],["sneakers","운동화"],["socks","양말"],["hat","모자"],["cap","야구모자"],["gloves","장갑"],["scarf","목도리"],["belt","벨트"],["ring","반지"],["necklace","목걸이"],["glasses","안경"],["umbrella","우산"],["bag","가방"],["pocket","주머니"],["fashion","패션"]] },
+        { u: 12, title: "동물과 반려동물", bank: [["animal","동물"],["pet","반려동물"],["dog","개"],["puppy","강아지"],["cat","고양이"],["kitten","새끼고양이"],["bird","새"],["parrot","앵무새"],["fish","물고기"],["rabbit","토끼"],["hamster","햄스터"],["horse","말"],["cow","소"],["pig","돼지"],["sheep","양"],["goat","염소"],["lion","사자"],["tiger","호랑이"],["bear","곰"],["elephant","코끼리"],["monkey","원숭이"],["zebra","얼룩말"],["giraffe","기린"],["deer","사슴"],["wolf","늑대"],["fox","여우"],["duck","오리"],["snake","뱀"],["frog","개구리"],["turtle","거북이"]] },
+        { u: 13, title: "자연과 환경", bank: [["nature","자연"],["earth","지구"],["world","세상"],["land","땅"],["ground","바닥"],["soil","흙"],["rock","바위"],["stone","돌"],["mountain","산"],["hill","언덕"],["valley","계곡"],["river","강"],["lake","호수"],["ocean","대양"],["sea","바다"],["beach","해변"],["island","섬"],["forest","숲"],["tree","나무"],["plant","식물"],["flower","꽃"],["leaf","나뭇잎"],["grass","풀"],["wood","목재"],["sky","하늘"],["sun","태양"],["moon","달"],["star","별"],["cloud","구름"],["air","공기"]] },
+        { u: 14, title: "날씨와 계절", bank: [["weather","날씨"],["season","계절"],["spring","봄"],["summer","여름"],["autumn","가을"],["fall","가을"],["winter","겨울"],["sunny","화창한"],["cloudy","구름 낀"],["rainy","비 오는"],["snowy","눈 내리는"],["windy","바람 부는"],["stormy","폭풍우 치는"],["hot","더운"],["warm","따뜻한"],["cool","시원한"],["cold","추운"],["freezing","몹시 추운"],["temperature","기온"],["rain","비"],["snow","눈"],["wind","바람"],["storm","폭풍"],["thunder","천둥"],["lightning","번개"],["ice","얼음"],["rainbow","무지개"],["fog","안개"],["breeze","산들바람"],["climate","기후"]] },
+        { u: 15, title: "취미와 여가", bank: [["hobby","취미"],["game","게임"],["toy","장난감"],["puzzle","퍼즐"],["doll","인형"],["card","카드"],["chess","체스"],["music","음악"],["song","노래"],["dance","춤"],["painting","그림"],["drawing","그리기"],["photo","사진"],["movie","영화"],["theater","극장"],["book","책"],["reading","독서"],["writing","글쓰기"],["camping","캠핑"],["fishing","낚시"],["travel","여행"],["trip","여행"],["vacation","휴가"],["holiday","공휴일"],["party","파티"],["sing","노래하다"],["play","놀다"],["collect","수집하다"],["enjoy","즐기다"],["fun","즐거움"]] },
+        { u: 16, title: "스포츠와 운동", bank: [["sport","스포츠"],["match","경기"],["race","경주"],["player","선수"],["ball","공"],["score","점수"],["win","이기다"],["lose","지다"],["champion","우승자"],["soccer","축구"],["baseball","야구"],["basketball","농구"],["volleyball","배구"],["tennis","테니스"],["golf","골프"],["swimming","수영"],["running","달리기"],["jump","점프하다"],["kick","차다"],["throw","던지다"],["catch","잡다"],["run","달리다"],["walk","걷다"],["stadium","경기장"],["exercise","운동"],["fitness","건강"],["stretch","스트레칭"],["goal","골, 목표"],["team","팀"],["coach","코치"]] },
+        { u: 17, title: "도시와 건물", bank: [["city","도시"],["town","마을"],["village","시골마을"],["street","거리"],["road","도로"],["avenue","대로"],["sidewalk","인도"],["park","공원"],["square","광장"],["station","역"],["bus stop","정류장"],["airport","공항"],["harbor","항구"],["store","상점"],["shop","가게"],["market","시장"],["supermarket","슈퍼"],["mall","몰"],["bank","은행"],["post office","우체국"],["police station","경찰서"],["fire station","소방서"],["library","도서관"],["museum","박물관"],["hotel","호텔"],["restaurant","식당"],["bakery","빵집"],["cafe","카페"],["cinema","영화관"],["building","건물"]] },
+        { u: 18, title: "교통과 이동", bank: [["transport","교통"],["ticket","표"],["passport","여권"],["luggage","짐"],["bus","버스"],["train","기차"],["subway","지하철"],["taxi","택시"],["car","자동차"],["bicycle","자전거"],["bike","오토바이"],["airplane","비행기"],["plane","비행기"],["helicopter","헬리콥터"],["ship","배"],["boat","보트"],["truck","트럭"],["driver","운전사"],["passenger","승객"],["pilot","조종사"],["captain","선장"],["ride","타다"],["drive","운전하다"],["fly","날다"],["sail","항해하다"],["stop","멈추다"],["arrive","도착하다"],["depart","출발하다"],["fast","빠른"],["slow","느린"]] },
+        { u: 19, title: "위치와 방향", bank: [["left","왼쪽"],["right","오른쪽"],["front","앞쪽"],["back","뒤쪽"],["top","위"],["bottom","아래"],["side","옆면"],["center","중앙"],["middle","중간"],["inside","안쪽"],["outside","바깥쪽"],["near","가까운"],["far","먼"],["between","사이에"],["under","아래에"],["above","위에"],["behind","뒤에"],["north","북쪽"],["south","남쪽"],["east","동쪽"],["west","서쪽"],["straight","직진"],["turn","회전하다"],["corner","모퉁이"],["cross","건너다"],["distance","거리"],["direction","방향"],["here","여기"],["there","저기"],["where","어디"]] },
+        { u: 20, title: "직업과 일", bank: [["job","직업"],["work","일하다"],["worker","근로자"],["career","경력"],["business","사업"],["boss","상사"],["office","사무실"],["manager","매니저"],["firefighter","소방관"],["police officer","경찰관"],["chef","요리사"],["waiter","웨이터"],["singer","가수"],["actor","배우"],["artist","화가"],["writer","작가"],["scientist","과학자"],["engineer","엔지니어"],["farmer","농부"],["baker","제빵사"],["lawyer","변호사"],["dentist","치과의사"],["vet","수의사"],["pilot","조종사"],["sailor","선원"],["reporter","기자"],["photographer","사진사"],["designer","디자이너"],["model","모델"],["judge","판사"]] },
+        { u: 21, title: "쇼핑과 금전", bank: [["buy","사다"],["sell","팔다"],["pay","지불하다"],["cost","비용이 들다"],["price","가격"],["money","돈"],["cash","현금"],["coin","동전"],["dollar","달러"],["cheap","값싼"],["expensive","비싼"],["sale","할인"],["discount","할인"],["receipt","영수증"],["change","거스름돈"],["customer","손님"],["clerk","점원"],["size","치수"],["color","색상"],["fit","맞다"],["choose","선택하다"],["want","원하다"],["need","필요하다"],["order","주문하다"],["total","합계"],["bill","지폐"],["wallet","지갑"],["mall","쇼핑몰"],["gift","선물"],["free","무료의"]] },
+        { u: 22, title: "과학과 기술", bank: [["science","과학"],["technology","기술"],["internet","인터넷"],["website","웹사이트"],["app","앱"],["email","이메일"],["data","데이터"],["file","파일"],["video","동영상"],["robot","로봇"],["space","우주"],["planet","행성"],["rocket","로켓"],["energy","에너지"],["power","전력"],["electricity","전기"],["machine","기계"],["invention","발명품"],["future","미래"],["system","시스템"],["screen","화면"],["keyboard","키보드"],["mouse","마우스"],["click","클릭하다"],["connect","연결하다"],["online","온라인"],["digital","디지털"],["smart","스마트한"],["speed","속도"],["search","검색하다"]] },
+        { u: 23, title: "수와 수량", bank: [["number","숫자"],["zero","영"],["one","하나"],["two","둘"],["three","셋"],["four","넷"],["five","다섯"],["six","여섯"],["seven","일곱"],["eight","여덟"],["nine","아홉"],["ten","열"],["hundred","백"],["thousand","천"],["million","백만"],["first","첫번째"],["second","두번째"],["third","세번째"],["count","세다"],["add","더하다"],["half","절반"],["quarter","1/4"],["double","두배"],["pair","한쌍"],["piece","조각"],["part","부분"],["length","길이"],["weight","무무게"],["amount","양"],["many","많은"]] },
+        { u: 24, title: "기본 동작 1", bank: [["come","오다"],["go","가다"],["sit","앉다"],["stand","서다"],["move","움직이다"],["stop","멈추다"],["push","밀다"],["pull","당기다"],["hold","잡다"],["carry","나르다"],["lift","들어올리다"],["drop","떨어뜨리다"],["fall","떨어지다"],["hit","치다"],["touch","만지다"],["open","열다"],["close","닫다"],["break","부수다"],["fix","고치다"],["build","짓다"],["make","만들다"],["create","창조하다"],["shake","흔들다"],["bend","구부리다"],["stretch","펴다"],["press","누르다"],["throw","던지다"],["catch","잡다"],["bring","가져오다"],["send","보내다"]] },
+        { u: 25, title: "기본 동작 2", bank: [["think","생각하다"],["know","알다"],["understand","이해하다"],["remember","기억하다"],["forget","잊다"],["believe","믿다"],["hope","바라다"],["decide","결정하다"],["find","찾다"],["lose","잃다"],["seek","구하다"],["show","보여주다"],["hide","숨기다"],["call","부르다"],["shout","소리치다"],["whisper","속삭이다"],["ask","묻다"],["answer","대답하다"],["teach","가르치다"],["learn","배우다"],["try","시도하다"],["check","확인하다"],["change","바꾸다"],["keep","유지하다"],["leave","떠나다"],["stay","머무르다"],["follow","따르다"],["lead","이끌다"],["wait","기다리다"],["pass","통과하다"]] },
+        { u: 26, title: "상태 형용사 1", bank: [["good","좋은"],["bad","나쁜"],["big","큰"],["small","작은"],["large","거대한"],["little","적은"],["long","긴"],["short","짧은"],["tall","키큰"],["high","높은"],["low","낮은"],["heavy","무거운"],["light","가벼운"],["hard","어려운"],["soft","부드러운"],["fast","빠른"],["slow","느린"],["new","새로운"],["old","오래된"],["young","젊은"],["fresh","신선한"],["clean","깨끗한"],["dirty","더러운"],["full","가득찬"],["empty","비어있는"],["rich","부유한"],["poor","가난한"],["safe","안전한"],["dangerous","위험한"],["easy","쉬운"]] },
+        { u: 27, title: "상태 형용사 2", bank: [["bright","밝은"],["dark","어두운"],["loud","시끄러운"],["quiet","조용한"],["same","같은"],["different","다른"],["special","특별한"],["simple","단순한"],["complex","복잡한"],["beautiful","아름다운"],["pretty","예쁜"],["ugly","못생긴"],["cute","귀여운"],["polite","공손한"],["rude","무례한"],["busy","바쁜"],["free","자유로운"],["ready","준비된"],["true","진실한"],["false","거짓의"],["correct","올바른"],["wrong","틀린"],["famous","유명한"],["useful","유용한"],["perfect","완벽한"],["strange","이상한"],["cool","멋진"],["fine","좋은"],["great","훌륭한"],["wonderful","멋진"]] },
+        { u: 28, title: "시간과 빈도", bank: [["always","항상"],["usually","보통"],["often","자주"],["sometimes","가끔"],["seldom","드물게"],["never","결코~않다"],["soon","곧"],["already","이미"],["ago","~전에"],["now","지금"],["then","그때"],["forever","영원히"],["moment","순간"],["recently","최근에"],["finally","마침내"],["suddenly","갑자기"],["together","함께"],["alone","혼자"],["again","다시"],["once","한번"],["twice","두번"],["daily","매일의"],["weekly","매주의"],["early","일찍"],["late","늦게"],["past","과거"],["present","현재"],["future","미래"],["always","언제나"],["every","모든"]] },
+        { u: 29, title: "의사소통 표현", bank: [["hello","안녕"],["goodbye","작별인사"],["thanks","고마움"],["please","부탁합니다"],["sorry","미안한"],["welcome","환영하다"],["excuse","용서하다"],["pardon","다시 말씀하세요"],["sure","그럼요"],["maybe","아마도"],["yes","예"],["no","아니오"],["okay","좋아"],["help","도움"],["problem","문제"],["idea","생각"],["opinion","의견"],["news","소식"],["message","메시지"],["letter","편지"],["note","메모"],["story","이야기"],["truth","진실"],["lie","거짓말"],["fact","사실"],["word","단어"],["language","언어"],["meaning","의미"],["speech","연설"],["voice","목소리"]] },
+        { u: 30, title: "생활과 세상", bank: [["life","삶"],["world","세계"],["nation","국가"],["country","나라"],["culture","문화"],["society","사회"],["law","법률"],["peace","평화"],["war","전쟁"],["art","예술"],["symbol","상징"],["flag","국기"],["king","왕"],["queen","여왕"],["power","힘"],["freedom","자유"],["dream","꿈"],["hope","희망"],["future","미래"],["nature","자연"],["earth","지구"],["human","인간"],["mind","마음"],["soul","영혼"],["chance","기회"],["goal","목표"],["success","성공"],["failure","실패"],["change","변화"],["grow","성장하다"]] }
+      ];
+
+      extraCategories.forEach(cat => {
+        cat.bank.forEach((item) => {
+          fullDatabase.push({
+            id: fullDatabase.length + 1,
+            unit: cat.u,
+            unitTitle: cat.title,
+            word: item[0],
+            meaning: item[1],
+            pos: "단어",
+            sentences: generateSentenceTriples(item[0], item[1], "단어")
+          });
+        });
+      });
+
+      return fullDatabase;
+    }
+
+    const WORD_DB = generateFull900WordList();
+  </script>
+
+  <script>
+    /* ====================================================================
+       App State & Audio Synthesizer Engine
+       ==================================================================== */
+    const STATE_KEY = "DUO_ENGLISH_900_APP_STATE_V2";
+
+    let state = {
+      streak: 1,
+      xp: 0,
+      gems: 50,
+      hearts: 5,
+      lastStudyDate: new Date().toDateString(),
+      completedLessons: {},
+      masteredWords: {},
+      bookmarkedWords: {},
+      highScoreSpeed: 0,
+      highComboSpeed: 0
+    };
+
+    function loadState() {
+      const saved = localStorage.getItem(STATE_KEY);
+      if (saved) {
+        try { state = { ...state, ...JSON.parse(saved) }; } catch(e){}
+      }
+      updateTopStatsUI();
+    }
+
+    function saveState() {
+      localStorage.setItem(STATE_KEY, JSON.stringify(state));
+      updateTopStatsUI();
+    }
+
+    function updateTopStatsUI() {
+      document.getElementById("stat-streak").innerText = state.streak;
+      document.getElementById("stat-xp").innerText = state.xp;
+      document.getElementById("stat-gems").innerText = state.gems;
+      document.getElementById("stat-hearts").innerText = state.hearts;
+      
+      const masteredCount = Object.keys(state.masteredWords).length;
+      const bar = document.getElementById("overall-progress-bar");
+      const text = document.getElementById("overall-progress-text");
+      if (bar && text) {
+        const pct = Math.min(100, Math.round((masteredCount / 900) * 100));
+        bar.style.width = `${pct}%`;
+        text.innerText = `${masteredCount} / 900 단어 (${pct}%)`;
+      }
+    }
+
+    let audioCtx = null;
+    function playSound(type) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (type === 'correct') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.08);
+          osc.frequency.setValueAtTime(783.99, now + 0.16);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now); osc.stop(now + 0.35);
+        } else if (type === 'wrong') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(160, now);
+          osc.frequency.setValueAtTime(120, now + 0.1);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+          osc.start(now); osc.stop(now + 0.3);
+        } else if (type === 'click') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(400, now);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          osc.start(now); osc.stop(now + 0.06);
+        }
+      } catch(e){}
+    }
+
+    function speakWord(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+  </script>
+
+  <script>
+    /* ====================================================================
+       Word Category Controller (단어 학습 카테고리 Engine)
+       ==================================================================== */
+    let currentStudyUnit = 1;
+    let studyUnitWords = [];
+    let currentStudyIndex = 0;
+
+    function initStudyView() {
+      // Populate unit dropdown
+      const select = document.getElementById("study-unit-select");
+      if (select && select.children.length === 0) {
+        for (let u = 1; u <= 30; u++) {
+          const sample = WORD_DB.find(w => w.unit === u);
+          const opt = document.createElement("option");
+          opt.value = u;
+          opt.innerText = `Unit ${u}: ${sample ? sample.unitTitle : '단어 학습'}`;
+          select.appendChild(opt);
+        }
+      }
+      loadStudyUnit(1);
+    }
+
+    function changeStudyUnit(unitId) {
+      playSound('click');
+      loadStudyUnit(parseInt(unitId));
+    }
+
+    function loadStudyUnit(unitId, wordId = null) {
+      currentStudyUnit = unitId;
+      studyUnitWords = WORD_DB.filter(w => w.unit === unitId);
+      if (studyUnitWords.length === 0) return;
+
+      if (wordId) {
+        const found = studyUnitWords.findIndex(w => w.id === wordId);
+        currentStudyIndex = found >= 0 ? found : 0;
+      } else {
+        currentStudyIndex = 0;
+      }
+
+      const select = document.getElementById("study-unit-select");
+      if (select) select.value = unitId;
+
+      renderCurrentStudyCard();
+    }
+
+    function renderCurrentStudyCard() {
+      const target = studyUnitWords[currentStudyIndex];
+      if (!target) return;
+
+      // Speak word on card change
+      speakWord(target.word);
+
+      // Unit Progress Indicator
+      document.getElementById("study-progress-text").innerText = `${currentStudyIndex + 1} / ${studyUnitWords.length}`;
+
+      // POS, Word & Korean Meaning
+      document.getElementById("study-card-pos").innerText = `[${target.pos}]`;
+      document.getElementById("study-card-word").innerText = target.word;
+      document.getElementById("study-card-meaning").innerText = target.meaning;
+
+      // Generate Dynamic Detailed SVG Illustration (설명 그림)
+      renderDynamicSVGIllustration(target);
+
+      // Render 3 Example Sentences
+      const sentencesBox = document.getElementById("study-card-sentences");
+      sentencesBox.innerHTML = "";
+
+      target.sentences.forEach((s, idx) => {
+        const div = document.createElement("div");
+        div.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl flex items-start justify-between gap-2 hover:bg-blue-50/60 transition cursor-pointer active:scale-[0.99]";
+        div.onclick = () => speakWord(s.en);
+        div.innerHTML = `
+          <div class="space-y-0.5">
+            <p class="text-xs font-extrabold text-gray-800 leading-snug">
+              <span class="text-blue-500 font-black mr-1">${idx + 1}.</span> ${s.en}
+            </p>
+            <p class="text-[11px] font-bold text-gray-500">${s.ko}</p>
+          </div>
+          <button class="w-7 h-7 rounded-xl bg-blue-100 text-blue-500 hover:bg-blue-200 flex-shrink-0 flex items-center justify-center text-xs shadow-sm">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        `;
+        sentencesBox.appendChild(div);
+      });
+
+      // Update Bookmark and Mastered state
+      updateStudyCardStates(target.id);
+    }
+
+    function renderDynamicSVGIllustration(target) {
+      const box = document.getElementById("study-card-illustration");
+      if (!box) return;
+
+      // Create tailored SVG Artwork per Unit Topic
+      let svgMarkup = "";
+      const unit = target.unit;
+
+      if (unit === 1) { // School
+        svgMarkup = `
+          <svg class="w-24 h-24 text-green-500" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="45" width="60" height="40" rx="6" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="4"/>
+            <path d="M50 15L15 45H85L50 15Z" fill="#10B981"/>
+            <rect x="42" y="60" width="16" height="25" fill="#047857" rx="2"/>
+            <circle cx="50" cy="35" r="6" fill="#FBBF24"/>
+          </svg>`;
+      } else if (unit === 2) { // Family
+        svgMarkup = `
+          <svg class="w-24 h-24 text-blue-500" viewBox="0 0 100 100" fill="none">
+            <path d="M50 20L80 45V80H20V45L50 20Z" fill="#3B82F6" fill-opacity="0.2" stroke="#3B82F6" stroke-width="4"/>
+            <path d="M50 50C45 42 32 46 32 56C32 66 50 78 50 78C50 78 68 66 68 56C68 46 55 42 50 50Z" fill="#EF4444"/>
+          </svg>`;
+      } else if (unit === 4) { // Food
+        svgMarkup = `
+          <svg class="w-24 h-24" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="35" fill="#FBBF24" fill-opacity="0.2" stroke="#F59E0B" stroke-width="4"/>
+            <path d="M50 25C35 25 25 38 25 50C25 65 38 75 50 75C62 75 75 65 75 50C75 38 65 25 50 25Z" fill="#EF4444"/>
+            <path d="M50 25C52 18 58 15 62 15" stroke="#10B981" stroke-width="4" stroke-linecap="round"/>
+          </svg>`;
+      } else if (unit === 5) { // Time
+        svgMarkup = `
+          <svg class="w-24 h-24" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="35" fill="#818CF8" fill-opacity="0.2" stroke="#6366F1" stroke-width="4"/>
+            <path d="M50 25V50L65 60" stroke="#4338CA" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="4" fill="#4338CA"/>
+          </svg>`;
+      } else if (unit === 6) { // Feelings
+        svgMarkup = `
+          <svg class="w-24 h-24" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="35" fill="#FDE047" stroke="#EAB308" stroke-width="4"/>
+            <circle cx="38" cy="42" r="5" fill="#451A03"/>
+            <circle cx="62" cy="42" r="5" fill="#451A03"/>
+            <path d="M35 62C40 70 60 70 65 62" stroke="#451A03" stroke-width="4" stroke-linecap="round"/>
+          </svg>`;
+      } else if (unit === 12) { // Animals
+        svgMarkup = `
+          <svg class="w-24 h-24" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="55" r="22" fill="#F97316"/>
+            <circle cx="32" cy="30" r="10" fill="#F97316"/>
+            <circle cx="68" cy="30" r="10" fill="#F97316"/>
+            <circle cx="22" cy="50" r="8" fill="#F97316"/>
+            <circle cx="78" cy="50" r="8" fill="#F97316"/>
+          </svg>`;
+      } else if (unit === 14) { // Weather
+        svgMarkup = `
+          <svg class="w-24 h-24" viewBox="0 0 100 100" fill="none">
+            <circle cx="38" cy="38" r="18" fill="#FBBF24"/>
+            <path d="M30 65C25 65 20 60 20 55C20 48 26 43 33 43C36 36 44 32 52 35C58 32 66 35 68 41C74 42 78 47 78 53C78 60 72 65 65 65H30Z" fill="#38BDF8" fill-opacity="0.9"/>
+          </svg>`;
+      } else { // Default Vector Category Graphic
+        svgMarkup = `
+          <svg class="w-24 h-24" viewBox="0 0 100 100" fill="none">
+            <rect x="25" y="20" width="50" height="60" rx="8" fill="#10B981" fill-opacity="0.15" stroke="#10B981" stroke-width="4"/>
+            <line x1="38" y1="35" x2="62" y2="35" stroke="#10B981" stroke-width="4" stroke-linecap="round"/>
+            <line x1="38" y1="48" x2="62" y2="48" stroke="#10B981" stroke-width="4" stroke-linecap="round"/>
+            <line x1="38" y1="61" x2="52" y2="61" stroke="#10B981" stroke-width="4" stroke-linecap="round"/>
+          </svg>`;
+      }
+
+      box.innerHTML = `
+        <div class="p-2 bg-white rounded-2xl shadow-sm border border-gray-100 mb-1">
+          ${svgMarkup}
+        </div>
+        <span class="text-xs font-black text-gray-500 uppercase tracking-wide">Category Illustration Graphic</span>
+      `;
+    }
+
+    function playStudyWordAudio() {
+      const target = studyUnitWords[currentStudyIndex];
+      if (target) speakWord(target.word);
+    }
+
+    function updateStudyCardStates(wordId) {
+      const isBookmarked = !!state.bookmarkedWords[wordId];
+      const isMastered = !!state.masteredWords[wordId];
+
+      const bmBtn = document.getElementById("study-bookmark-btn");
+      if (bmBtn) {
+        bmBtn.className = `w-9 h-9 rounded-xl flex items-center justify-center text-base hover:scale-105 transition ${isBookmarked ? 'bg-yellow-100 text-yellow-500 border border-yellow-300' : 'bg-gray-100 text-gray-400'}`;
+      }
+
+      const masterBtn = document.getElementById("study-master-btn");
+      const masterText = document.getElementById("study-master-text");
+      if (masterBtn && masterText) {
+        if (isMastered) {
+          masterBtn.className = "col-span-3 py-3.5 bg-emerald-100 border-2 border-emerald-400 text-emerald-700 font-black text-base rounded-2xl flex items-center justify-center gap-2";
+          masterText.innerText = "암기 완료됨 ✓";
+        } else {
+          masterBtn.className = "col-span-3 py-3.5 btn-duo-green font-black text-base rounded-2xl flex items-center justify-center gap-2";
+          masterText.innerText = "암기 완료 체크";
+        }
+      }
+    }
+
+    function toggleStudyBookmark() {
+      playSound('click');
+      const target = studyUnitWords[currentStudyIndex];
+      if (!target) return;
+      if (state.bookmarkedWords[target.id]) {
+        delete state.bookmarkedWords[target.id];
+      } else {
+        state.bookmarkedWords[target.id] = true;
+      }
+      saveState();
+      updateStudyCardStates(target.id);
+    }
+
+    function toggleStudyMastered() {
+      playSound('click');
+      const target = studyUnitWords[currentStudyIndex];
+      if (!target) return;
+      if (state.masteredWords[target.id]) {
+        delete state.masteredWords[target.id];
+      } else {
+        state.masteredWords[target.id] = true;
+      }
+      saveState();
+      updateStudyCardStates(target.id);
+    }
+
+    function prevStudyWord() {
+      playSound('click');
+      if (currentStudyIndex > 0) {
+        currentStudyIndex--;
+        renderCurrentStudyCard();
+      }
+    }
+
+    function nextStudyWord() {
+      playSound('click');
+      if (currentStudyIndex < studyUnitWords.length - 1) {
+        currentStudyIndex++;
+        renderCurrentStudyCard();
+      }
+    }
+
+    function switchTab(tabId) {
+      playSound('click');
+      ['study', 'path', 'wordbook', 'speed'].forEach(id => {
+        const screen = document.getElementById(`screen-${id}`);
+        const btn = document.getElementById(`nav-btn-${id}`);
+        if (screen && btn) {
+          if (id === tabId) {
+            screen.classList.remove("hidden");
+            btn.className = "flex flex-col items-center text-green-500 font-extrabold text-xs space-y-1";
+            const iconBox = btn.querySelector("div");
+            if (iconBox) iconBox.className = "w-10 h-10 rounded-2xl flex items-center justify-center text-lg bg-green-100";
+          } else {
+            screen.classList.add("hidden");
+            btn.className = "flex flex-col items-center text-gray-400 hover:text-green-500 font-extrabold text-xs space-y-1";
+            const iconBox = btn.querySelector("div");
+            if (iconBox) iconBox.className = "w-10 h-10 rounded-2xl flex items-center justify-center text-lg hover:bg-gray-100";
+          }
+        }
+      });
+      if (tabId === 'study') initStudyView();
+      if (tabId === 'wordbook') renderWordbook();
+    }
+  </script>
+
+  <script>
+    /* ====================================================================
+       Path Tree Rendering Engine
+       ==================================================================== */
+    function renderUnitPath() {
+      const container = document.getElementById("unit-path-container");
+      if (!container) return;
+      container.innerHTML = "";
+
+      for (let u = 1; u <= 30; u++) {
+        const isCompleted = !!state.completedLessons[u];
+        const isCurrent = u === 1 || !!state.completedLessons[u - 1];
+        const isLocked = !isCompleted && !isCurrent;
+
+        const sampleWord = WORD_DB.find(w => w.unit === u);
+        const title = sampleWord ? sampleWord.unitTitle : `유닛 ${u}`;
+
+        const offsets = ["translate-x-0", "translate-x-6", "translate-x-12", "translate-x-6", "translate-x-0", "-translate-x-6", "-translate-x-12", "-translate-x-6"];
+        const offsetClass = offsets[(u - 1) % offsets.length];
+
+        const nodeWrapper = document.createElement("div");
+        nodeWrapper.className = `flex flex-col items-center transition-all transform ${offsetClass}`;
+        
+        let btnBg = "bg-green-500 shadow-[0_6px_0_#46a302] text-white";
+        let iconHtml = `<i class="fa-solid fa-star text-2xl"></i>`;
+
+        if (isCompleted) {
+          btnBg = "bg-yellow-400 shadow-[0_6px_0_#d9a700] text-gray-800";
+          iconHtml = `<i class="fa-solid fa-check text-2xl font-black"></i>`;
+        } else if (isLocked) {
+          btnBg = "bg-gray-300 shadow-[0_6px_0_#b5b5b5] text-gray-500";
+          iconHtml = `<i class="fa-solid fa-lock text-xl"></i>`;
+        } else if (isCurrent) {
+          btnBg = "bg-green-500 shadow-[0_6px_0_#46a302] text-white ring-8 ring-green-200 pulse-node";
+          iconHtml = `<i class="fa-solid fa-play text-2xl ml-1"></i>`;
+        }
+
+        nodeWrapper.innerHTML = `
+          ${(u - 1) % 5 === 0 ? `
+            <div class="w-full my-3 py-1.5 px-4 bg-white border-2 border-gray-200 rounded-2xl text-center shadow-sm">
+              <span class="text-[10px] font-black text-green-600 uppercase">SECTION ${Math.ceil(u / 5)}</span>
+              <h3 class="text-xs font-extrabold text-gray-700">유닛 ${u} ~ ${Math.min(30, u + 4)}</h3>
+            </div>
+          ` : ''}
+
+          <!-- Stage Button Area -->
+          <div class="flex flex-col items-center gap-2">
+            <button onclick="startLesson(${u})" ${isLocked ? 'disabled' : ''} class="w-20 h-20 rounded-full ${btnBg} flex items-center justify-center transition hover:scale-105 active:translate-y-1">
+              ${iconHtml}
+            </button>
+
+            <!-- 1-Word 1-Page Study Button -->
+            <button onclick="openSingleCardView(${u})" ${isLocked ? 'disabled' : ''} class="px-3 py-1 bg-white hover:bg-gray-100 text-blue-600 border border-blue-200 rounded-xl text-[11px] font-extrabold shadow-sm flex items-center gap-1">
+              <i class="fa-solid fa-book-open"></i> 1단어 1페이지
+            </button>
+          </div>
+          
+          <div class="mt-1 text-center">
+            <span class="text-xs font-extrabold text-gray-700 block">Unit ${u}</span>
+            <span class="text-xs font-bold text-gray-500">${title}</span>
+          </div>
+        `;
+
+        container.appendChild(nodeWrapper);
+      }
+    }
+  </script>
+
+  <script>
+    /* ====================================================================
+       Quiz Engine Logic & Wordbook Rendering
+       ==================================================================== */
+    let currentQuizUnit = 1;
+    let quizWords = [];
+    let currentQuestionIndex = 0;
+    let quizHearts = 5;
+    let selectedOptionValue = null;
+    let currentQuestionData = null;
+
+    function startLesson(unitId) {
+      playSound('click');
+      if (state.hearts <= 0) { openShopModal(); return; }
+
+      currentQuizUnit = unitId;
+      const unitAllWords = WORD_DB.filter(w => w.unit === unitId);
+      quizWords = [...unitAllWords].sort(() => 0.5 - Math.random()).slice(0, 10);
+      currentQuestionIndex = 0;
+      quizHearts = state.hearts;
+
+      document.getElementById("quiz-hearts").innerText = quizHearts;
+      document.getElementById("screen-quiz").classList.remove("hidden");
+      renderNextQuizQuestion();
+    }
+
+    function renderNextQuizQuestion() {
+      if (currentQuestionIndex >= quizWords.length) { finishLessonSuccess(); return; }
+
+      const sheet = document.getElementById("quiz-feedback-sheet");
+      sheet.classList.add("hidden", "translate-y-full");
+
+      const pct = Math.round((currentQuestionIndex / quizWords.length) * 100);
+      document.getElementById("quiz-progress-inner").style.width = `${pct}%`;
+
+      const targetWord = quizWords[currentQuestionIndex];
+      currentQuestionData = targetWord;
+      speakWord(targetWord.word);
+
+      const type = Math.floor(Math.random() * 2);
+      document.getElementById("quiz-target-word").innerText = targetWord.word;
+      document.getElementById("quiz-subtext").innerText = `[${targetWord.pos}] 올바른 뜻을 선택하세요`;
+      
+      const optionsZone = document.getElementById("quiz-options-zone");
+      optionsZone.innerHTML = "";
+      selectedOptionValue = null;
+
+      const checkBtn = document.getElementById("quiz-check-btn");
+      checkBtn.disabled = true;
+      checkBtn.className = "w-full py-4 btn-duo-gray font-black text-lg rounded-2xl uppercase transition-all";
+
+      const otherWords = WORD_DB.filter(w => w.id !== targetWord.id);
+      const distractors = [...otherWords].sort(() => 0.5 - Math.random()).slice(0, 3);
+      const options = [...distractors, targetWord].sort(() => 0.5 - Math.random());
+
+      options.forEach((opt, idx) => {
+        const card = document.createElement("button");
+        card.className = "w-full p-4 text-left font-bold text-base rounded-2xl card-3d bg-white hover:bg-gray-50 flex items-center justify-between transition active:scale-[0.98]";
+        card.onclick = () => selectOption(card, opt.meaning);
+        card.innerHTML = `
+          <div class="flex items-center space-x-3">
+            <span class="w-8 h-8 rounded-xl bg-gray-100 border border-gray-300 flex items-center justify-center text-xs text-gray-500 font-extrabold">${idx + 1}</span>
+            <span>${opt.meaning}</span>
+          </div>
+        `;
+        optionsZone.appendChild(card);
+      });
+    }
+
+    function selectOption(cardEl, value) {
+      playSound('click');
+      selectedOptionValue = value;
+      const parent = document.getElementById("quiz-options-zone");
+      Array.from(parent.children).forEach(c => c.className = "w-full p-4 text-left font-bold text-base rounded-2xl card-3d bg-white flex items-center justify-between transition");
+      cardEl.className = "w-full p-4 text-left font-bold text-base rounded-2xl card-3d-selected flex items-center justify-between transition";
+
+      const checkBtn = document.getElementById("quiz-check-btn");
+      checkBtn.disabled = false;
+      checkBtn.className = "w-full py-4 btn-duo-green font-black text-lg rounded-2xl uppercase transition-all shadow-md";
+    }
+
+    function checkQuizAnswer() {
+      if (!selectedOptionValue || !currentQuestionData) return;
+      const isCorrect = selectedOptionValue === currentQuestionData.meaning;
+
+      const sheet = document.getElementById("quiz-feedback-sheet");
+      const iconBox = document.getElementById("feedback-icon-box");
+      const title = document.getElementById("feedback-title");
+      const detail = document.getElementById("feedback-detail");
+      const nextBtn = document.getElementById("feedback-next-btn");
+
+      sheet.classList.remove("hidden");
+      setTimeout(() => sheet.classList.remove("translate-y-full"), 10);
+
+      if (isCorrect) {
+        playSound('correct');
+        state.masteredWords[currentQuestionData.id] = true;
+        sheet.className = "fixed bottom-0 left-0 right-0 max-w-md mx-auto p-6 rounded-t-3xl bg-green-100 border-t-4 border-green-500 z-50 transition-all duration-300";
+        iconBox.className = "w-12 h-12 rounded-2xl bg-green-500 text-white text-2xl font-black flex items-center justify-center";
+        iconBox.innerHTML = `<i class="fa-solid fa-check"></i>`;
+        title.className = "text-xl font-black text-green-800";
+        title.innerText = "훌륭합니다! 정답입니다!";
+        detail.innerText = `${currentQuestionData.word} : ${currentQuestionData.meaning}`;
+        nextBtn.className = "w-full py-4 btn-duo-green font-black text-lg rounded-2xl shadow-md uppercase mt-3";
+      } else {
+        playSound('wrong');
+        quizHearts--;
+        state.hearts = Math.max(0, quizHearts);
+        document.getElementById("quiz-hearts").innerText = quizHearts;
+        saveState();
+
+        sheet.className = "fixed bottom-0 left-0 right-0 max-w-md mx-auto p-6 rounded-t-3xl bg-red-100 border-t-4 border-red-500 z-50 transition-all duration-300";
+        iconBox.className = "w-12 h-12 rounded-2xl bg-red-500 text-white text-2xl font-black flex items-center justify-center";
+        iconBox.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+        title.className = "text-xl font-black text-red-800";
+        title.innerText = "아쉽네요! 정답을 확인하세요.";
+        detail.innerText = `정답: ${currentQuestionData.word} = ${currentQuestionData.meaning}`;
+        nextBtn.className = "w-full py-4 bg-red-500 hover:bg-red-600 text-white font-black text-lg rounded-2xl shadow-md uppercase mt-3";
+      }
+
+      nextBtn.onclick = () => {
+        currentQuestionIndex++;
+        renderNextQuizQuestion();
+      };
+    }
+
+    function exitQuiz() {
+      playSound('click');
+      document.getElementById("screen-quiz").classList.add("hidden");
+    }
+
+    function finishLessonSuccess() {
+      playSound('correct');
+      state.xp += 15; state.gems += 10;
+      state.completedLessons[currentQuizUnit] = true;
+      saveState();
+
+      document.getElementById("complete-xp-gain").innerText = `+15 XP`;
+      document.getElementById("complete-gem-gain").innerText = `+10 Gems`;
+      document.getElementById("modal-complete").classList.remove("hidden");
+      document.getElementById("screen-quiz").classList.add("hidden");
+    }
+
+    function closeCompleteModal() {
+      document.getElementById("modal-complete").classList.add("hidden");
+      renderUnitPath();
+      switchTab('path');
+    }
+
+    // Wordbook Renderer
+    let currentWordbookFilter = 'all';
+    function renderWordbook() {
+      const listContainer = document.getElementById("wordbook-list");
+      const searchVal = (document.getElementById("wordbook-search")?.value || "").toLowerCase().trim();
+      const unitVal = document.getElementById("filter-unit-select")?.value || "all";
+      if (!listContainer) return;
+      listContainer.innerHTML = "";
+
+      let filtered = WORD_DB.filter(w => {
+        const matchSearch = w.word.toLowerCase().includes(searchVal) || w.meaning.includes(searchVal);
+        const matchUnit = unitVal === "all" || w.unit === parseInt(unitVal);
+        let matchTag = true;
+        if (currentWordbookFilter === 'bookmarked') matchTag = !!state.bookmarkedWords[w.id];
+        if (currentWordbookFilter === 'mastered') matchTag = !!state.masteredWords[w.id];
+        return matchSearch && matchUnit && matchTag;
+      });
+
+      document.getElementById("wordbook-count").innerText = `${filtered.length}개 단어`;
+
+      filtered.slice(0, 100).forEach(w => {
+        const card = document.createElement("div");
+        card.className = "bg-white p-4 rounded-2xl card-3d flex items-center justify-between gap-3 transition hover:border-green-300";
+        card.innerHTML = `
+          <div class="flex-1 cursor-pointer" onclick="openSingleCardView(${w.unit}, ${w.id})">
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-black text-green-600 bg-green-50 px-2 py-0.5 rounded-md border border-green-200">U${w.unit}</span>
+              <h4 class="text-lg font-black text-gray-800">${w.word}</h4>
+              <span class="text-xs text-gray-400 font-bold">[${w.pos}]</span>
+            </div>
+            <p class="text-xs font-extrabold text-gray-600 mt-1">${w.meaning}</p>
+          </div>
+          <button onclick="speakWord('${w.word}')" class="text-blue-500 hover:text-blue-600 text-lg p-2">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    function switchTab(tabId) {
+      playSound('click');
+      ['path', 'wordbook', 'speed'].forEach(id => {
+        const screen = document.getElementById(`screen-${id}`);
+        const btn = document.getElementById(`nav-btn-${id}`);
+        if (screen && btn) {
+          if (id === tabId) {
+            screen.classList.remove("hidden");
+            btn.className = "flex flex-col items-center text-green-500 font-extrabold text-xs space-y-1";
+          } else {
+            screen.classList.add("hidden");
+            btn.className = "flex flex-col items-center text-gray-400 hover:text-green-500 font-extrabold text-xs space-y-1";
+          }
+        }
+      });
+      if (tabId === 'wordbook') renderWordbook();
+    }
+
+    function openShopModal() { document.getElementById("modal-shop").classList.remove("hidden"); }
+    function closeShopModal() { document.getElementById("modal-shop").classList.add("hidden"); }
+
+    window.onload = function() {
+      loadState();
+      initStudyView();
+      renderUnitPath();
+    };
+  </script>
+</body>
+</html>
